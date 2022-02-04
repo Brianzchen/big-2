@@ -54,12 +54,38 @@ type DeckT = Array<CardT>;
 
 type HandT = {
   cards: Array<CardT>,
+  passed: boolean,
+};
+
+enum ComboType {
+  Any,
+  Singles,
+  Doubles,
+  Triples,
+  FourOfAKind,
+  Fivers,
+}
+
+type MoveT = {
+  cards: Array<CardT>,
+  comboType: ComboType,
+};
+
+type BoardStateT = {
+  players: Array<HandT>,
+  cardsInPlay: Array<CardT>,
+  currentComboType: ComboType,
+  /**
+   * Who's turn it is relative to array of `players`
+   */
+  playerTurn: number,
+  makeMove: (player: number, move: MoveT) => void,
 };
 
 const CARDS_PER_HAND = 13;
 const HANDS_PER_GAME = 4;
 
-const shuffleArray = (unshuffled) => (
+const shuffleArray = (unshuffled: DeckT) => (
   unshuffled
     .map((value) => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
@@ -84,6 +110,7 @@ const shuffleDeck = (): DeckT => {
 const dealHands = (deck: DeckT): Array<HandT> => {
   const hands = [...(Array(HANDS_PER_GAME).keys())].map(() => ({
     cards: [],
+    passed: false,
   }));
 
   for (let i = 0, len = deck.length; i < len; i += 4) {
@@ -95,6 +122,22 @@ const dealHands = (deck: DeckT): Array<HandT> => {
   return hands;
 };
 
+const generateBoardState = (): BoardStateT => {
+  const hands = dealHands(shuffleDeck());
+
+  const initialBoardState = {
+    players: hands,
+    cardsInPlay: [],
+    currentComboType: ComboType.Any,
+    playerTurn: hands.findIndex((hand) => (
+      hand.cards.find((card) => card.suit === 'Diamonds' && card.value === 'Three')
+    )),
+    makeMove: () => {},
+  };
+
+  return initialBoardState;
+};
+
 module.exports = {
   constants: {
     CARDS_PER_HAND,
@@ -102,4 +145,5 @@ module.exports = {
   },
   shuffleDeck,
   dealHands,
+  generateBoardState,
 };

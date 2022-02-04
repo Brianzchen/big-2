@@ -12,6 +12,7 @@ eslint-plugin-jsx-a11y
 eslint-plugin-react
 eslint-plugin-react-hooks
 eslint-plugin-testing-library
+flow-copy-source
 flow-enums-runtime
 husky
 lint-staged

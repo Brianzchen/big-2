@@ -1,18 +1,24 @@
 {
   "name": "big-2",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "repository": "git@github.com:Brianzchen/big-2.git",
   "license": "MIT",
+  "bin": {
+    "big-2": "./bin/index.js"
+  },
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "build:flow": "flow-copy-source --ignore '**/*.spec.*' src bin",
+    "build": "rm -rf bin && babel src --out-dir bin && yarn build:flow"
   },
   "dependencies": {
     "flow-enums-runtime": "^0.0.6",
     "keymirror": "^0.1.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.17.0",
     "@babel/core": "^7.17.0",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/plugin-syntax-flow": "^7.16.7",
@@ -32,6 +38,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-testing-library": "^5.0.5",
     "flow-bin": "^0.171.0",
+    "flow-copy-source": "^2.0.9",
     "jest": "^27.4.7"
   }
 }
