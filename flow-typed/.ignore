@@ -1,0 +1,17 @@
+@babel/
+babel-jest
+babel-plugin-transform-flow-enums
+eslint
+eslint-config-airbnb
+eslint-config-bzc
+eslint-plugin-fb-flow
+eslint-plugin-ft-flow
+eslint-plugin-import
+eslint-plugin-jest
+eslint-plugin-jsx-a11y
+eslint-plugin-react
+eslint-plugin-react-hooks
+eslint-plugin-testing-library
+flow-enums-runtime
+husky
+lint-staged
