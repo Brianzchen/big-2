@@ -122,6 +122,12 @@ const dealHands = (deck: DeckT): Array<HandT> => {
   return hands;
 };
 
+const findStartingPlayer = (hands: Array<HandT>): number => (
+  hands.findIndex((hand) => (
+    hand.cards.find((card) => card.suit === 'Diamonds' && card.value === 'Three')
+  ))
+);
+
 const generateBoardState = (): BoardStateT => {
   const hands = dealHands(shuffleDeck());
 
@@ -129,9 +135,7 @@ const generateBoardState = (): BoardStateT => {
     players: hands,
     cardsInPlay: [],
     currentComboType: ComboType.Any,
-    playerTurn: hands.findIndex((hand) => (
-      hand.cards.find((card) => card.suit === 'Diamonds' && card.value === 'Three')
-    )),
+    playerTurn: findStartingPlayer(hands),
     makeMove: () => {},
   };
 
@@ -143,7 +147,8 @@ module.exports = {
     CARDS_PER_HAND,
     HANDS_PER_GAME,
   },
-  shuffleDeck,
+  findStartingPlayer,
   dealHands,
   generateBoardState,
+  shuffleDeck,
 };
