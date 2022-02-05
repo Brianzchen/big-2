@@ -1,4 +1,8 @@
 // @flow
+const readline = require('readline').createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 const keymirror = require('keymirror');
 
 const Suits: {
@@ -131,16 +135,34 @@ const findStartingPlayer = (hands: Array<HandT>): number => (
 const generateBoardState = (): BoardStateT => {
   const hands = dealHands(shuffleDeck());
 
-  const initialBoardState = {
+  const boardState = {
     players: hands,
     cardsInPlay: [],
     currentComboType: ComboType.Any,
     playerTurn: findStartingPlayer(hands),
-    makeMove: () => {},
+    makeMove: () => {
+      if (boardState.playerTurn === HANDS_PER_GAME - 1) {
+        boardState.playerTurn = 0;
+      } else {
+        boardState.playerTurn += 1;
+      }
+    },
   };
 
-  return initialBoardState;
+  return boardState;
 };
+
+const makePlayerMove = (boardState: BoardStateT): Promise<void> => new Promise((resolve) => {
+  readline.question(`What move would you like to make?
+Type the sequence of cards you'd like to highlight and then press enter to play
+`, (answer) => {
+    console.info(`user entered: ${answer}`);
+    boardState.makeMove(boardState.playerTurn, { cards: [], comboType: ComboType.Singles });
+    console.info(`The next players turn is ${boardState.playerTurn + 1}`);
+    readline.close();
+    resolve();
+  });
+});
 
 module.exports = {
   constants: {
@@ -150,5 +172,6 @@ module.exports = {
   findStartingPlayer,
   dealHands,
   generateBoardState,
+  makePlayerMove,
   shuffleDeck,
 };

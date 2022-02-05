@@ -11,7 +11,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "build:flow": "flow-copy-source --ignore '**/*.spec.*' src bin",
-    "build": "rm -rf bin && babel src --out-dir bin && yarn build:flow"
+    "build": "rm -rf bin && babel src --out-dir bin && yarn build:flow",
+    "play": "yarn build && node ./bin/index.js"
   },
   "dependencies": {
     "flow-enums-runtime": "^0.0.6",
