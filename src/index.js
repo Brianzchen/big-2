@@ -20,6 +20,8 @@ We're going to start with shuffling a new deck and dealing out some cards to all
   console.info('...');
   await sleep(500);
 
+  engine.renderBoard(boardState);
+
   console.info(playerStartsFirst
     ? 'You get to go first because you have the Three of Diamonds'
     : `One of your opponents (Player ${boardState.playerTurn + 1}) will go first`);

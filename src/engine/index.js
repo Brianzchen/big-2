@@ -18,6 +18,21 @@ const Suits: {
   Diamonds: null,
 });
 
+const toShortSuit = (suit: $Keys<typeof Suits>): string => {
+  switch (suit) {
+    case 'Spades':
+      return '♠';
+    case 'Hearts':
+      return '♥';
+    case 'Clubs':
+      return '♣';
+    case 'Diamonds':
+      return '♦';
+    default:
+      return ' ';
+  }
+};
+
 const Values: {
   One: $Call<<K>(k: K) => K, 'One', null>,
   Two: $Call<<K>(k: K) => K, 'Two', null>,
@@ -48,6 +63,46 @@ const Values: {
   Queen: null,
   King: null,
 });
+
+const toValueShort = (value: $Keys<typeof Values>): string => {
+  const getShort = () => {
+    switch (value) {
+      case 'One':
+        return 'A';
+      case 'Two':
+        return '2';
+      case 'Three':
+        return '3';
+      case 'Four':
+        return '4';
+      case 'Five':
+        return '5';
+      case 'Six':
+        return '6';
+      case 'Seven':
+        return '7';
+      case 'Eight':
+        return '8';
+      case 'Nine':
+        return '9';
+      case 'Ten':
+        return '10';
+      case 'Jack':
+        return 'J';
+      case 'Queen':
+        return 'Q';
+      case 'King':
+        return 'K';
+      default:
+        return ' ';
+    }
+  };
+  const short = getShort();
+  if (short.length === 2) {
+    return short;
+  }
+  return ` ${short}`;
+};
 
 type CardT = {
   value: $Keys<typeof Values>,
@@ -152,6 +207,27 @@ const generateBoardState = (): BoardStateT => {
   return boardState;
 };
 
+const renderBoard = (boardState: BoardStateT) => {
+  console.info(`
+      Player: 3
+      ${boardState.players[2].cards.map(() => '+-----+ ').join('')}
+      ${boardState.players[2].cards.map(() => '|     | ').join('')}
+      ${boardState.players[2].cards.map(() => '|  $  | ').join('')}
+      ${boardState.players[2].cards.map(() => '|     | ').join('')}
+      ${boardState.players[2].cards.map(() => '+-----+ ').join('')}${boardState.players[1].cards.map((o, i) => `
++-----+                                                                                              ${boardState.players[3].cards[i] ? '+-----+' : ''}
+|     |                                                                                              ${boardState.players[3].cards[i] ? '|     |' : ''}${i === boardState.players[1].cards.length - 1 ? `
+|  $  |                                                                                              ${boardState.players[3].cards[i] ? '|  $  |' : ''}
+|     |                                                                                              ${boardState.players[3].cards[i] ? '|     |' : ''}
++-----+                                                                                              ${boardState.players[3].cards[i] ? '+-----+' : ''}` : ''}`).join('')}
+      ${boardState.players[0].cards.map(() => '+-----+ ').join('')}
+      ${boardState.players[0].cards.map((card) => `|   ${toValueShort(card.value)}| `).join('')}
+      ${boardState.players[0].cards.map((card) => `|  ${toShortSuit(card.suit)}  | `).join('')}
+      ${boardState.players[0].cards.map((card) => `|${toValueShort(card.value)}   | `).join('')}
+      ${boardState.players[0].cards.map(() => '+-----+ ').join('')}
+`);
+};
+
 const makePlayerMove = (boardState: BoardStateT): Promise<void> => new Promise((resolve) => {
   readline.question(`What move would you like to make?
 Type the sequence of cards you'd like to highlight and then press enter to play
@@ -173,5 +249,6 @@ module.exports = {
   dealHands,
   generateBoardState,
   makePlayerMove,
+  renderBoard,
   shuffleDeck,
 };
